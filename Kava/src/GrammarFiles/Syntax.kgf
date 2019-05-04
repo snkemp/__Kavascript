@@ -1,0 +1,13 @@
+
+Global: Kavascript* ;
+
+Kavascript
+    : Statement
+    | FunctionDefinition
+    | AtomDefinition
+    | StructDefinition
+    | ClassDefinition
+    | EnumDefinition
+    | Declaration
+    | DefineDefinition
+    | Expression ;

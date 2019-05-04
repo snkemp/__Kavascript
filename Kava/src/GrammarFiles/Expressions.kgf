@@ -1,0 +1,140 @@
+
+Expression
+    : LambdaExpression
+    | ConditionalExpression 
+    | SendExpression
+    | GeneratorExpression
+    | OrExpression ;
+
+LambdaExpression
+    : LAMBDA FunctionArguments COLON Expression ;
+
+ConditionalExpression
+    : OrExpression IF OrExpression ELSE Expression ;
+
+SendExpression
+	: OrExpression
+	| SendExpression SEND OrExpression ;
+
+
+GeneratorExpression
+    : Expression GeneratorLoop GeneratorConditional ;
+
+GeneratorLoop
+    : FOR FunctionParameters IN Expression
+    | FOR FunctionParameters OF Expression
+    | FOR FunctionParameters FROM Expression ;
+
+GeneratorConditional
+    : IF Expression
+    | WHILE Expression
+    | UNTIL Expression ;
+
+
+OrExpression
+	: NorExpression
+	| OrExpression OR NorExpression ;
+
+NorExpression
+	: XorExpression
+	| NorExpression NOR XorExpression ;
+
+
+XorExpression
+	: XNorExpression
+	| XorExpression XOR XnorExpression ;
+
+XnorExpression
+	: AndExpression
+	| XnorExpression XNOR AndExpression ;
+
+
+AndExpression
+	: NandExpression
+	| AndExpression AND NandExpression ;
+
+NandExpression
+	: NotExpression
+	| NandExpression NAND NotExpression ;
+
+
+NotExpression
+    : NOT* ComparativeExpression ;
+
+ComparativeExpression
+    : BitOrExpression ((IN | NOT_IN | IS | IS_NOT | LT | LE | GT | GE | NE | EQ | TNE | TEQ) BitOrExpression)* ;
+
+
+BitOrExpression
+	: BitXorExpression
+	| BitOrExpression BIT_OR BitXorExpression ;
+
+BitXorExpression
+	: BitAndExpression
+	| BitXorExpression BIT_XOR BitAndExpression ;
+
+BitAndExpression
+	: BitShiftExpression
+	| BitAndExpression BIT_AND BitShiftExpression ;
+
+BitShiftExpression
+    : SymbolicExpression ((BIT_SHIFT_LEFT | BIT_SHIFT_RIGHT | BIT_U_SHIFT_RIGHT) SymbolicExpression)* ;
+
+
+SymbolicExpression
+    : AdditionExpression
+    | AdditionExpression ((SYMBOL | BSLASH | DBSLASH ) AdditionExpression)* ;
+
+AdditionExpression
+    : MultiplicativeExpression ((PLUS | MINUS) MultiplicativeExpression)* ;
+
+MultiplicativeExpression
+    : UnaryExpression ((MUL | DIV | FDIV | MOD) UnaryExpression)* ;
+
+
+UnaryExpression
+    : (INC | DEC | PLUS | MINUS | BIT_NOT | NOT | MEM | AT | SYMBOL)* PowerExpression ;
+
+
+PowerExpression
+	: ReferenceExpression
+	| PowerExpression POW ReferenceExpression ;
+
+ReferenceExpression
+    : Value
+    | ReferenceExpression (MEMBER | FMEMBER | SMEMBER) Identifer
+    | ReferenceExpression LSQB SliceExpression RSQB
+    | ReferenceExpression LPAREN ArgumentExpression RPAREN ;
+
+Value
+    : TRUE
+    | FALSE
+    | NULL
+    | Undefined
+    | Number
+    | Character
+    | String
+    | Collection
+    | Identifier
+    | RangeExpression
+    | Ellipsis
+    | LPAREN Expression RPAREN ;
+
+RangeExpression
+    : Number RANGE Number ; 
+
+ArgumentExpression
+	: Expression
+	| ArgumentExpression COMMA Expression ;
+
+SliceExpression
+    : Expression
+    | Expression? COLON Expression?
+    | Expression? COLON Expression? COLON Expression?
+    | SliceExpression COMMA SliceExpression ;
+
+
+
+
+
+

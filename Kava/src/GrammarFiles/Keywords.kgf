@@ -1,0 +1,75 @@
+
+
+
+# Types
+INT: 'int' ;
+STR: 'str' ;
+CHAR: 'char' ;
+BOOL: 'bool' ;
+
+Type
+    : INT
+    | STR
+    | CHAR
+    | BOOL ;
+
+
+# Import Export
+IMPORT: 'import' ;
+EXPORT: 'export' ;
+
+# Classes
+ATOM: 'atom' ;
+CLASS: 'class' ;
+ENUM: 'enum' ;
+STRUCT: 'struct' ;
+
+# Functions
+DEF: 'def' ;
+FUNC: 'func' ;
+GET: 'get' ;
+LAMBDA: 'lambda' ;
+OPER: 'oper' ;
+PREFIX: 'prefix oper' ;
+POSTFIX: 'postfix oper' ;
+SET: 'set';
+
+# Control Flow Stops
+BREAK: 'break' ;
+CONTINUE: 'continue' ;
+DELIVER: 'deliver' ;
+RET: 'ret' ;
+RETURN: 'return' ;
+UNTIL: 'until' ;
+YIELD: 'yield';
+
+# Control Flow - Try/Catch
+ATTEMPT: 'attempt' ;
+EXCEPT: 'except' ;
+FINALLY: 'finally' ;
+IGNORE: 'ignore' ;
+RAISE: 'raise' ;
+
+# Control Flow - If/elif/else
+IF: 'if' ;
+ELIF: 'elif' ;
+ELSE: 'else' ;
+
+# Control Flow - Loops
+DO: 'do' ;
+FOR: 'for' ;
+LOOP: 'loop' ;
+WHILE: 'while' ;
+
+# Control Flow - Other
+OTHERWISE: 'otherwise' ;
+THEN: 'then' ;
+WHEN: 'when' ;
+
+# Values
+TRUE: 'true' | 'vrai' ;
+FALSE: 'false' | 'faux' ;
+NULL: 'null' ;
+UNDEFINED: 'undefined' ;
+
+DEL: 'del' ;

@@ -1,0 +1,59 @@
+Identifier
+    : "[a-zA-Z_]\w*" ;
+
+Parameters
+    : Identifier?
+    | Parameters COMMA Identifier ;
+
+AtomDefinition
+    : ATOM Identifier? LBRACE DataMembers RBRACE (Identifier Terminator)* ;
+
+StructDefinition
+    : STRUCT Identifier? LBRACE DataMembers RBRACE (Identifier Terminator)* ;
+
+DataMembers
+    : Declaration (Terminator Declaration)* ;
+
+
+ClassDefinition
+    : CLASS Identifier (LPAREN Identidier RPAREN)? LBRACE ClassMember* RBRACE ;
+
+ClassMember
+    : DefineDefinition
+    | FunctionDefinition
+    | Getter
+    | Setter
+    | OperatorDefinition ;
+
+EnumDefinition
+    : ENUM Identifier (LPAREN Identifier RPAREN)? LBRACE ArgumentList RBRACE ;
+
+Declaration
+    : Identifier ASSIGN Expression;
+
+DefineDefinition
+    : DEF Declaration ;
+
+FunctionDefinition
+    : FUNC Identifier LPAREN FunctionParamenters RPAREN ScopedStatement ;
+
+Getter
+    : GET Identifier LPAREN Parameters RPAREN ScopedStatement ;
+
+Setter
+    : SET Identifier LPAREN Parameters RPAREN ScopedStatement ;
+
+OperatorDefinition
+    : InfixDefinition
+    | PrefixDefinition
+    | PostfixDefinition ;
+
+InfixDefinition
+    : OPER SYMBOL LPAREN Parameters RPAREN ScopedStatement ;
+
+PrefixDefinition
+    : PREFIX SYMBOL LPAREN Parameters RPAREN ScopedStatement ;
+
+PostfixDefinition 
+    : POSTFIX SYMBOL LPAREN Parameters RPAREN ScopedStatement ;
+

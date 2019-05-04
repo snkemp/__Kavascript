@@ -1,0 +1,41 @@
+
+Tuple
+    : LPAREN TupleElements RPAREN ;
+
+TupleElements
+    : Value
+    | TupleElements COMMA Value ;
+
+Set
+    : LBRACE GeneratorExpression RBRACE
+    | LBRACE SetElements RBRACE ;
+
+SetElements
+    : Expression
+    | SetElements COMMA Expression ;
+
+Dict
+    : LBRACE DictElements? RBRACE
+    | LBRACE Expression COLON GeneratorExpression ;
+
+DictElements
+    : Expression COLON Expression
+    | DictElements COMMA Expression COLON Expression ;
+
+List
+    : LSQB ListElements? RSQB
+    | LSQB GeneratorExpression RSQB ; 
+
+ListElements
+    : Expression
+    | ListElements COMMA Expression ;
+
+
+Collection
+    : Tuple
+    | Set
+    | Dict
+    | List ;
+
+TypedCollection
+    : Type Collection ;

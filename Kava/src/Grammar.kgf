@@ -1,0 +1,521 @@
+###
+# 
+# Kavascript Context Free Grammar
+#
+#
+#
+###
+
+kavascript: global* ;
+global
+    : class_definition
+    | enum_definition
+    | atom_defintion
+    | function_definition
+    | statement
+    | epsilon ;
+
+epsilon: '';
+ignored
+    : comment
+    | whitespace ;
+
+COMMENT
+    : "/\*(.\n)*?\*/"
+    | "#.*\n" ;
+
+WHITESPACE
+    : "[\s]" ;
+
+
+identifier
+    : "[A-Za-z_@]\w*" ;
+    
+### Syntax ###
+
+# Objects
+class_defintion
+    : CLASS, identifier, class_inheritance?, LBRACE, class_body*, RBRACE ;
+
+class_inheritance
+    : LPAREN, identifier*, RPAREN ;
+
+class_body
+    : class_definition
+    | enum_definition
+    | atom_definition
+    | function_definition
+    | oper_definition
+    | property_definition
+    | statement
+    | epsilon ;
+
+
+enum_definition
+    : ENUM, identifier, class_inheritance?, LBRACE, enum_body, RBRACE ;
+
+enum_body
+    : identifier, ((COMMA | whitespace), identifier)*, function_definition* ;
+
+
+atom_defintion
+    : ATOM, identifier?, LBRACE, identifer*, RBRACE, identifier? ;
+
+
+# Functions
+
+function_defintition
+    : FUNC, identifier, (LPAREN, identifier*, RPAREN)?, scoped_statement ;
+
+oper_definition
+    : prefix_oper_definition
+    | postfix_oper_definition
+    | infix_oper_definition ;
+
+prefix_oper_definition
+    : PREFIX, LPAREN, identifier, RPAREN, scoped_statement ;
+
+postfix_oper_definition
+    : POSTFIX, LPAREN, identifier, RPAREN, scoped_statement ;
+
+infix_oper_definition
+    : OPER, LPAREN, identifier, identifier, RPAREN, scoped_statement ;
+
+property_definition
+    : getter
+    | setter ;
+
+getter
+    : GET, identifier, scoped_statement ;
+
+setter
+    : SET, identifier, LPAREN, identifier, identifier, RPAREN, scoped_statement ;
+
+# Statement
+
+scoped_statement
+    : LBRACE, statement*, RBRACE
+    | COLON, statement ;
+
+statement
+    : assignment
+    | if_statement
+    | attempt_statement
+    | do_statement
+    | while_statment
+    | for_statement
+    | loop_statement
+    | continue_statement
+    | break_statement
+    | until_statement
+    | return_statement
+    | yield_statement
+    | deliver_statement
+    | raise_statement ;
+
+
+assignment
+    : identifier_expression, assignment_operator, expression ;
+
+
+if_statement
+    : IF, scoped_statement, ( elif_statement | else_statement )? ;
+
+elif_statement
+    : ELIF, scoped_statement, ( elif_statement | else_statement )? ;
+
+else_statement
+    : ELSE, scoped_statement ;
+
+
+attempt_statement
+    : ATTEMPT, scoped_statement, ignore_statement*, except_statement*, finally_statement? ;
+
+ignore_statement
+    : IGNORE, identifier_expression, scoped_statement ;
+
+except_statement
+    : EXCEPT, identifier_expression, scoped_statement ;
+
+finally_statement
+    : FINALLY, scoped_statement ;
+
+
+do_statement
+    : DO, loop_name?, scoped_statement, WHILE, expression, SEMICOLON ;
+
+while_statement
+    : WHILE, expression, loop_name?, scoped_statement, then_statement?, otherwise_statement? ;
+
+for_statement
+    : FOR, identifier, (COMMA, identifier*), (IN | OF | FROM), expression, loop_name?, scoped_statement, then_statement?, otherwise_statement? ;
+
+loop_statement
+    : LOOP, assignment?, SEMICOLON, expression?, SEMICOLON, assignment?, loop_name?, scoped_statement, then_statement?, otherwise_statement? ;
+
+loop_name
+    : AS, identifier ;
+
+
+continue_statement
+    : CONTINUE, identifier? ;
+
+break_statement
+    : BREAK, identifier? ;
+
+until_statement
+    : UNTIL, expression, SEMICOLON ;
+    
+return_statement
+    : RETURN, expression ;
+    
+yield_statement
+    : YIELD, expression ;
+    
+deliver_statement
+    : DELIVER, expression ;
+    
+raise_statement
+    : RAISE, identifier_expression ;
+
+
+
+
+
+# Expressions
+
+expression
+    : conditional_expression
+    | lambda_expression
+    | bool_or_expression ;
+
+conditional_expression
+    : bool_or_expression, IF, bool_or_expression, ELSE, expression ;
+
+lambda_expression
+    : LAMBDA, (identifier, (COMMA, identifier)*)?, SEMICOLON, bool_or_expression ;
+
+bool_or_expression
+    : bool_xor_expression, ( (OR | NOR), bool_xor_expression )* ;
+
+bool_xor_expression
+    : bool_and_expression, ( (XOR | XNOR), bool_xnor_expression )* ;
+
+bool_and_expression
+    : bool_not_expression, ( (AND | NAND), bool_not_expression )* ;
+
+bool_not_expression
+    : NOT?, comparison_expression ;
+
+comparison_expression
+    : bit_or_expression, ( (IN | NOT_IN | IS | IS_NOT | LT | LE | GT | GE | NE | EQ | TNE | TEQ), bit_or_expression )* ;
+
+bit_or_expression
+    : bit_xor_expression, ( PIPE, bit_xor_expression )* ;
+
+bit_xor_expression
+    : bit_and_expression, ( CARAT, bit_and_expression )* ;
+
+bit_and_expression
+    : bit_shift_expression, ( AMPERSAND, bit_shift_expression )* ;
+
+bit_shift_expression
+    : addition_expression, ( (BSL | BSR | LBSR), addition_expression )* ;
+
+addition_expression
+    : custom_operator_expression, ( (ADD | SUB), custom_operator_expression )* ;
+
+custom_operator_expression
+    : multiplicative_expression, ( undefined_operator, multiplicative_expression ) ;
+
+multiplicative_expression
+    : unary_expression, ( (MULT | DIV | FDIV | MOD), unary_expression )* ;
+
+unary_expression
+    : (unary_operator | undefined_operator), exponential_expression ;
+
+exponential_expression
+    : value, ( POW, value )* ;
+
+
+value
+    : LPAREN, expression, RPAREN
+    | identifier_expression
+    | string
+    | character
+    | number
+    | collection ;
+
+identifier_expression
+    : identifier
+    | identifier, DOT, identifier_expression
+    | identifier, LSQB, expression, ( (COMMA | COLON), expression)*, RSQB
+    | identifier, LPAREN, (expression, ( COMMA, expression )* )?, RPAREN ;
+
+string
+    : STRING_LITERAL
+    | SCRIPT_LITERAL
+    | FORMAT_LITERAL ;
+
+character
+    : CHARACTER_LITERAL ;
+
+number
+    : INTEGER
+    | FLOAT
+    | COMPLEX ;
+
+
+collection
+    : set
+    | typed_set
+    | list
+    | typed_list
+    | dict
+    | typed_dict
+    | tuple ;
+
+set
+    : LBRACE, expression, (COMMA, expression)*, RBRACE 
+    | LBRACE, expression, FOR, identifier, IN, expression, RBRACE ;
+
+typed_set
+    : identifier, set ;
+
+list
+    : LSQB, RSQB
+    | LSQB, expression, (COMMA, expression)*, RSQB 
+    | LSQB, expression, FOR, identifier, IN, expression, RSQB ;
+
+typed_list
+    : identifier, list ;
+
+dict
+    : LBRACE, (expression, COLON, expression, (COMMA, expression, COLON, expression)*)?, RBRACE 
+    | LBRACE, expression, COLON, expression, FOR, identifier, IN, expression, RBRACE ;
+
+typed_dict
+    : identifier, dict ;
+
+tuple
+    : LPAREN, RPAREN
+    | LPAREN, expression, COMMA RPAREN
+    | expression, (COMMA, expression)* ;
+
+
+
+
+### Literals ###
+
+# Strings
+
+STRING_LITERAL
+    : QUOTE, STRING_CHARACTER*, QUOTE ;
+
+STRING_CHARACTER
+    : BACKSLASH, QUOTE
+    | "[^\"]" ;
+
+SCRIPT_LITERAL
+    : QUOTE, QUOTE, QUOTE, SCRIPT_CHARACTER*, QUOTE, QUOTE, QUOTE ;
+
+SCRIPT_CHARACTER
+    :  "." ;
+
+FORMAT_LITERAL
+    : TIC, FORMAT_CHARACTER*, TIC ;
+
+FORMAT_CHARACTER
+    : BACKSLASH, TIC
+    | "[^`]" ;
+
+# Characters
+CHARACTER_LITERAL
+    : APOSTROPHE, CHARACTER_CHARACTER, APOSTROPHE ;
+
+CHARACTER_CHARACTER
+    : BACKSLASH, APOSTROPHE
+    | "[^']" ;
+
+# Numbers
+BIN_VALUE
+    : BIN_DIGIT
+    | BIN_DIGIT, UNDERSCORE?, BIN_VALUE ;
+
+BIN_INTEGER
+    : BIN_PREFIX, BIN_VALUE ;
+
+OCT_VALUE
+    : OCT_DIGIT
+    | OCT_DIGIT, UNDERSCORE?, OCT_VALUE ;
+
+OCT_INTEGER
+    : OCT_PREFIX, OCT_VALUE ;
+
+HEX_VALUE
+    : HEX_DIGIT
+    | HEX_DIGIT, UNDERSCORE?, HEX_VALUE ;
+
+HEX_INTEGER
+    : HEX_PREFIX, HEX_VALUE ;
+
+DEC_VALUE
+    : DIGIT
+    | UNDERSCORE, DIGIT, DEC_VALUE ; 
+
+DEC_INTEGER
+    : ZERO+
+    | NON_ZERO_DIGIT, DEC_VALUE? ;
+
+
+DEC_FLOAT
+    : DEC_INTEGER, PERIOD
+    | DEC_INTEGER?, PERIOD, DIGIT+ ;
+
+DEC_SCIENTIFIC
+    : ( DEC_INTEGER | DEC_FLOAT ), "[eE]", DEC_INTEGER ;
+
+
+DEC_COMPLEX
+    : DEC_INTEGER, "[ijk]"
+    | DEC_FLOAT, "[ijk]";
+
+
+INTEGER
+    : BIN_INTEGER
+    | OCT_INTEGER
+    | HEX_INTEGER
+    | DEC_INTEGER ;
+
+FLOAT
+    : DEC_FLOAT
+    | SCIENTIFIC ;
+
+COMPLEX
+    : DEC_COMPLEX ;
+
+
+
+### Terminals ###
+
+# Keywords
+CLASS : 'class';
+ATOM : 'atom';
+ENUM : 'enum';
+
+FUNC : 'func';
+OPER : 'oper';
+PREFIX : 'prefix oper';
+POSTFIX : 'postfix oper';
+GET : 'get';
+SET : 'set';
+LAMBDA : 'lambda';
+
+RETURN : 'return';
+DELIVER : 'deliver';
+YIELD : 'yield';
+RET : 'ret';
+
+IF : 'if';
+ELIF : 'elif';
+ELSE : 'else';
+
+FOR : 'for';
+LOOP : 'loop';
+DO : 'do';
+WHILE : 'while';
+UNTIL : 'until';
+
+THEN : 'then';
+OTHERWISE : 'otherwise';
+
+BREAK : 'break';
+CONTINUE : 'continue';
+
+ATTEMPT : 'attempt';
+IGNORE : 'ignore';
+EXCEPT : 'except';
+RAISE : 'raise';
+FINALLY : 'finally';
+
+TRUE : 'true' | 'vrai';
+FALSE : 'false' | 'faux';
+NULL : 'null';
+UNDEFINED : 'undefined';
+
+INT : 'int';
+STR : 'str';
+CHAR : 'char';
+BOOL : 'bool';
+
+AS : 'as';
+IN : 'in';
+OF : 'of';
+FROM : 'from';
+
+NOT_IN : 'not in';
+IS : 'is';
+IS_NOT : 'is not';
+
+AND : 'and';
+NAND : 'nand';
+OR : 'or';
+NOR : 'nor';
+XOR : 'xor';
+XNOR : 'xnor';
+
+# Symbols
+
+LPAREN : '(';
+RPAREN : ')';
+LBRACE : '{';
+RBRACE : '}';
+LSQB : '[';
+RSQB : ']';
+
+LANGLE : '<';
+RANGLE : '>';
+
+TILDE : '~';
+TIC : '`';
+EXCLAM : '!';
+AT : '@';
+POUND : '#';
+DOLLAR : '$';
+PERCENT : '%';
+CARAT : '^';
+AMPERSAND : '&';
+STAR : '*';
+UNDERSCORE : '_';
+DASH : '-';
+PLUS : '+';
+EQUALS : '=';
+PIPE : '|';
+BSLASH : '\\';
+COLON : ':';
+SEMICOLON : ';';
+QUOTE : '"';
+APOSTROPHE : '\'';
+COMMA : ',';
+PERIOD : '.';
+QUESTION : '?';
+SLASH : '/';
+
+
+# Alpha numerics
+
+UPPERCASE : "[A-Z]";
+LOWERCASE : "[a-z]";
+LETTER
+    : UPPERCASE
+    | LOWERCASE ;
+
+
+ZERO : '0';
+NON_ZERO_DIGIT : "[1-9]";
+BIN_DIGIT : "[01]";
+OCT_DIGIT : "[0-7]";
+HEX_DIGIT : "[0-9a-fA-F]";
+
+
+

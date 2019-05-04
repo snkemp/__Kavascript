@@ -1,0 +1,138 @@
+
+ASSIGN: '=';
+
+# Brackets
+LPAREN: '(' ;
+RPAREN: ')' ;
+
+LBRACE: '{' ;
+RBRACE: '}' ;
+
+LSQB: '[' ;
+RSQB: ']' ;
+
+
+# Bitwise operators
+BIT_SHIFT_LEFT: '<<' ;
+BIT_SHIFT_RIGHT: '>>' ;
+BIT_U_SHIFT_RIGHT: '>>>' ;
+
+ASSIGN_BSL: '<<=' ;
+ASSIGN_BSR: '>>=' ;
+ASSIGN_UBSR: '>>>=' ;
+
+BIT_OR: '|' ;
+BIT_AND: '&' ;
+BIT_XOR: '^' ;
+BIT_NOT: '~' ;
+BIT_POWER: '!' ;
+
+ASSIGN_BOR: '|=' ;
+ASSIGN_BAND: '&=' ;
+ASSIGN_BXOR: '^=' ;
+
+# Boolean operators
+AND: 'and' ;
+NAND: 'nand' ;
+OR: 'or' ;
+NOR: 'nor' ;
+XOR: 'xor' ;
+XNOR: 'xnor' ;
+
+
+# Comparators
+IS: 'is' ;
+IS_NOT: 'is not' ;
+
+IN: 'in' ;
+NOT_IN: 'not in' ;
+
+LT: '<' ;
+LE: '<=' ;
+GT: '>' ;
+GE: '>=' ;
+NE: '!=' ;
+EQ: '==' ;
+TNE: '!==' ;
+TEQ: '===' ;
+
+# Arithmetic operators
+PLUS: '+' ;
+INC: '++' ;
+ASSIGN_ADD: '+=' ;
+
+MINUS: '-' ;
+DEC: '--' ;
+ASSIGN_SUB: '-=' ;
+
+MUL: '*' ;
+ASSIGN_MUL: '*=' ;
+
+POW: '**' ;
+ASSIGN_POW: '**=' ;
+
+DIV: '/' ;
+ASSIGN_DIV: '/=' ;
+
+FDIV: '//' ;
+ASSIGN_FDIV: '//=' ;
+
+#BSLASH: '\\' ;
+#ASSIGN_BSLASH: '\\=' ;
+
+#DBSLASH: '\\\\' ;
+#ASSIGN_DBSLASH: '\\\\=' ;
+
+AT: '@' ;
+#ASSIGN_AT: '@=' ;
+
+MEM: '#' ;
+#ASSIGN_MEM: '#=' ;
+
+#DPOUND: '##' ;
+#ASSIGB_DPOUND: '##=' ;
+
+SEND: '$' ;
+#ASSIGN_SEND: '$=' ;
+
+#DSEND: '$$' ;
+#ASSIGN_DSEND: '$$=' ;
+
+MOD: '%' ;
+ASSIGN_MOD: '%=' ;
+
+#DPERCENT: '%%' ;
+#ASSIGN_DPERCENT: '%%=' ;
+
+#DAMPERSAND: '&&' ;
+#ASSIGN_DAMPERSAND: '&&=' ;
+
+#DPIPE: '||' ;
+#ASSIGN_DPIPE: '||=' ;
+
+
+# Member Access
+MEMBER: '.' ;
+FMEMBER: '!.' ;
+SMEMBER: '?.' ;
+
+
+# Seperators, Terminators
+COLON: ':' ;
+DCOLON: '::' ;
+SEMI_COLON: ';' ;
+DSEMI_COLON: ";;.*\n" ;
+COMMA: ',' ;
+RANGE: '..' ;
+ELLIPSIS: '...' ;
+
+
+# Other
+DIST: '<>' ;
+ASSIGN_DIST: '<=>' ;
+
+MID: '><' ;
+ASSIGN_MID: '><=' ;
+
+SYMBOL: "[^\w\s{}[\]()\`\'\"=]+" | "[a-z]+" ;
+ASSIGN_SYMBOL: "[^\w\s{}[\]()\`\'\"=]=" ;

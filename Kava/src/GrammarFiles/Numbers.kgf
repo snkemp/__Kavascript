@@ -1,0 +1,67 @@
+
+
+Number
+    : Integer
+    | Float
+    | Complex ;
+
+
+Integer
+    : BinaryInteger
+    | OctalInteger
+    | DecimalInteger
+    | HexadecimalInteger ;
+
+
+
+BinaryInteger
+    : "0[bB]" BinaryNumber ;
+
+BinaryNumber
+    : "[01]"
+    | "[01]" UNDERSCORE?? BinaryNumber ;
+
+
+OctalInteger
+    : "0[oO]" OctalNumber ;
+
+OctalNumber
+    : "[0-7]"
+    | "[0-7]" UNDERSCORE?? BinaryNumber ;
+
+
+DecimalInteger
+    : "0+"
+    | "[1-9]\d*" ;
+
+
+HexadecimalInteger
+    : "0[xX]" HexadecimalNumber ;
+
+HexadecimalNumber
+    : "[A-Fa-f\d]"
+    | "[A-Fa-f\d]" UNDERSCORE?? HexadecimalNumber ;
+
+
+
+Float
+    : FloatingPoint
+    | Scientific ;
+
+
+FloatingPoint
+    : "\d+" DOT "\d*"
+    | "\d*" DOT "\d+" ;
+
+Scientific
+    : (FloatingPoint | DecimalInteger) 
+      "[eE]"
+      "[+\-]"??
+      (FloatingPoint | DecimalInteger) ; 
+
+
+
+Complex
+    : (DecimalInteger | Float) "[ijk]" ;
+
+

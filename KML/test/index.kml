@@ -1,0 +1,39 @@
+
+
+/* Comment */
+
+html {
+    head {
+        title: 'KML';
+        meta {
+            @author: 'snkemp';
+            @description: 'KML example';
+        }
+
+        style('style.css'): 
+        """
+            html { background: blue; }
+            h1 { color: white; }
+            #paragraph { color: black; }
+            .buttons { background: green; }
+            .buttons:hover { background: red; }
+        """;
+
+        script('index.js'):
+        """
+            function onload() { alert('KML'); }
+        """;
+    }
+
+    body {
+        @onload: 'onload()';
+
+        h1: 'KML';
+        p #paragraph: 'Foo bar baz lorem ipsum';
+        br;
+        br;
+        button -buttons: 'Yes';
+        button -buttons: 'No';
+    }
+
+}

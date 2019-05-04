@@ -1,0 +1,120 @@
+
+
+ScopedStatement
+    : COLON Statement
+    | LBRACE Statement* RBRACE 
+    | Terminator;
+
+Terminator
+    : SEMI_COLON
+    | DSEMI_COLON ;
+
+IfStatement
+    : IF Expression ScopedStatement ElifStatement? ;
+
+ElifStatement
+    : ELIF Expression ScopedStatement ElifStatement?
+    | ElseStatement ;
+
+ElseStatement
+    : ELSE Expression ScopedStatement ;
+
+
+Alias
+    : AS Identifier ;
+
+ForStatement
+    : FOR Argument (IN | OF | FROM) Expression Alias? ScopedStatement ThenStatement? ;
+
+LoopStatement
+    : LOOP Assignment SEMI_COLON Expression SEMI_COLON Assignment Alias? ScopedStatement ThenStatement? ;
+
+WhileStatement
+    : WHILE Expression Alias? ScopedStatement ThenStatement? ;
+
+DoStatement
+    : DO Alias? ScopedStatement DoWhileStatement? ;
+
+DoWhileStatement
+    : WHILE Expression Terminator
+    | UntilStatement ;
+
+ThenStatement
+    : THEN ScopedStatement OtherwiseStatement?
+    | OtherwiseStatement ;
+
+OtherwiseStatement
+    : OTHERWISE ScopedStatement ;
+
+
+AttemptStatement
+    : ATTEMPT ScopedStatement IgnoreStatement? ;
+
+IgnoreStatement
+    : IGNORE Identifier Terminator IgnoreStatment?
+    | ExceptStatement ;
+
+ExceptStatement
+    : EXCEPT Identifier ScopedStatement ExceptStatement?
+    | FinallyStatement ;
+
+FinallyStatement
+    : FINALLY ScopedStatement ;
+
+BreakStatement
+    : BREAK Identifier? ;
+
+ContinueStatment
+    : CONTINUE Identifier? ;
+
+DeliverStatement
+    : DELIVER Expression ;
+
+ReturnStatement
+    : RETURN Expression ;
+
+UntilStatement
+    : UNTIL Expression Terminator ;
+
+WhenStatement
+    : Expression WHEN Expression Terminator
+    | Assignment WHEN Expression Terminator ;
+
+ImportStatement
+    : IMPORT ReferenceExpression Alias? (FROM ReferenceExpression)? Terminator ;
+
+ExportStatement
+    : EXPORT ReferenceExpression Alias? Terminator ;
+
+Assignment
+    : ReferenceExpression AssignmentOperator Expression ;
+
+AssignmentOperator
+    : ASSIGN_BSL
+    | ASSIGN_BSR
+    | ASSIGN_UBSR
+    | ASSIGN_BOR
+    | ASSIGN_BAND
+    | ASSIGN_BXOR
+    | ASSIGN_
+
+
+Statement
+    : IfStatement
+    | ForStatement
+    | WhileStatement
+    | DoStatement
+    | LoopStatement
+    | AttemptStatement
+    | BreakStatement
+    | ContinueStatement
+    | DeliverStatement
+    | ReturnStatement
+    | UntilStatement
+    | WhenStatement
+    | Expression
+    | Assignment 
+    | ImportStatement
+    | ExportStatement ;
+
+

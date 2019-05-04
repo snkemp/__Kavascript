@@ -1,0 +1,46 @@
+
+StringLiteral
+    : String
+    | Script
+    | Format
+    | Character ;
+
+
+EscapedCharacter
+    : "\\[\'\"\`abfnrtv]" ;
+
+
+String
+    : QUOTE StringElement*? QUOTE ;
+
+StringElement
+    : EscapedCharacter
+    | "[^\"]" ;
+
+
+
+Script
+    : QUOTE QUOTE QUOTE ScriptElement*? QUOTE QUOTE QUOTE ;
+
+ScriptElement
+    : EscapedCharacter
+    | "\s" ;
+
+
+
+Format
+    : TIC FormatElement*? TIC ;
+
+FormatElement
+    : EscapedCharacter
+    | "[^\`]" ;
+
+
+Character
+    : APOSTROPHE CharacterElement APOSTROPHE ;
+
+CharacterElement
+    : EscapedCharacter
+    | "[^\']" ;
+
+
